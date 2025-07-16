@@ -1,14 +1,20 @@
 import type { z, infer as zodInfer } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "../../components/ui/form";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage} from "../../components/ui/form";
 import { Input } from "../../components/ui/input"
 import { Button } from "../../components/ui/button";
 import { SignupValidation } from "../../lib/Validation/index";
 import Loader from "../../components/shared/Loader";
 import { Link } from "react-router-dom";
+import { createUserAccount } from "../../lib/appwrite/Api";
+import  {useToast} from "../../hooks/use-toast";
+
+
+
 
 const SignupForm = () => {
+  const { toast } = useToast()
   const isLoading =false; 
   const form = useForm<z.Infer<typeof SignupValidation>>({
     
@@ -21,16 +27,21 @@ const SignupForm = () => {
     },
   });
 
-  function onSubmit(values: zodInfer<typeof SignupValidation>) {
-    console.log(values);
+  async function onSubmit(values: zodInfer<typeof SignupValidation>) {
+    const newUser=createUserAccount(values)
+     if(!newUser){
+       return toast({ title:"Sign Up failed Please try again" 
+        })
+     }
+    //  const session= await signInAccount()
   }
 
   return (
     <Form {...form}>
       <div className="sm:w-420 flex-center flex-col mr-[-2rem]">
-      <img className="justify-center items-center" src="/images/Logo.svg" alt="logo" />
+      <img className="justify-center items-center h-[7.5rem] w-auto" src="/images/logoImg.png" alt="logo" />
       <h2 className="h3-bold md:h6-bold sm:pt-2 ">Create a new account</h2>
-      <p className="text-light-3 small-medium md:base-regular mt-2 mb-2">To use Snapgram enter your details</p>
+      <p className="text-light-3 small-medium md:base-regular mt-2 mb-2">To use SnapFlare please enter your details</p>
     
       <form  onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col w-full space-y-3">
         <FormField
