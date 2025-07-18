@@ -4,18 +4,19 @@ import { ID } from "appwrite";
 import { avatars } from "./Config";
 import { Query } from "appwrite";
 
-
 export async function createUserAccount(user: INewUser) {
     try {
         const newAccount = await account.create(
-            ID.unique(),
-            user.name,
-            user.email,
-            user.password,
+            ID.unique(),        // correct userId
+            user.email,         // ✅ correct email
+            user.password,      // ✅ correct password
+            user.name           // ✅ correct name (optional)
         );
+
         if (!newAccount) throw new Error("Failed to create account");
+
         const avatarUrl = avatars.getInitials(user.name);
-        // ckeck later//
+
         await saveUserTODB({
             accountId: newAccount.$id,
             name: newAccount.name,
@@ -24,15 +25,14 @@ export async function createUserAccount(user: INewUser) {
             avatarUrl: avatarUrl,
         });
 
-
         return newAccount;
 
     } catch (error) {
-        console.log("error");
-        return error
+        console.log("Account creation error:", error);
+        return error;
     }
-
 }
+
 export async function saveUserTODB(user: {
     accountId: string;
     name: string;

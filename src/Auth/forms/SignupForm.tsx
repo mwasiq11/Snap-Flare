@@ -9,11 +9,7 @@ import Loader from "../../components/shared/Loader";
 import { Link,useNavigate} from "react-router-dom";
 import  {useToast} from "../../hooks/use-toast";
 import { useCreateSignInAccount, useCreateUserAccount } from "../../lib/react-query/queriesAndmutations";
-
 import { useUserContext } from "../../Context/AuthContext";
-
-
-
 
 const SignupForm = () => {
   const { toast } = useToast()
@@ -132,7 +128,5 @@ const SignupForm = () => {
     </Form>
   );
 }
-
-
 
 export default SignupForm;
